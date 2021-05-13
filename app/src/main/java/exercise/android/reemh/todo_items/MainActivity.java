@@ -1,31 +1,67 @@
 package exercise.android.reemh.todo_items;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.graphics.Paint;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.widget.EditText;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity {
 
-  public TodoItemsHolder holder = null;
+    public TodoItemsHolder holder = null;
 
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_main);
+//    private ArrayList<TodoItem> todoItems = new ArrayList<>();
 
-    if (holder == null) {
-      holder = new TodoItemsHolderImpl();
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        if (holder == null) {
+            holder = new TodoItemsHolderImpl();
+        }
+
+        FloatingActionButton createNewTodoButton = findViewById(R.id.buttonCreateTodoItem);
+        EditText editText = findViewById(R.id.editTextInsertTask);
+        RecyclerView recyclerView = findViewById(R.id.recyclerTodoItemsList);
+
+        TodoItemAdapter todoAdapter = new TodoItemAdapter();
+        todoAdapter.setTodoItemListener(item -> {
+            holder.markItemDone(item);
+//            item.flipInProgress();
+
+            if (!item.isDone())
+            {
+                editText.setPaintFlags(editText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            }
+            else
+            {
+                editText.setPaintFlags(editText.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+            }
+        });
+        todoAdapter.getHolder(holder);
+        holder.setAdapter(todoAdapter);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+        recyclerView.setAdapter(todoAdapter);
+
+        createNewTodoButton.setOnClickListener(v -> {
+            String taskDesc = editText.getText().toString();
+            if (taskDesc.isEmpty())
+            {
+                return;
+            }
+            holder.addNewInProgressItem(taskDesc);
+            editText.setText("");
+
+        });
+        // TODO: implement the specs as defined below
+        //    (find all UI components, hook them up, connect everything you need)
     }
-
-    // TODO: implement the specs as defined below
-    //    (find all UI components, hook them up, connect everything you need)
-  }
 }
 
 /*

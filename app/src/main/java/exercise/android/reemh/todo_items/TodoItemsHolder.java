@@ -23,4 +23,14 @@ public interface TodoItemsHolder {
 
   /** delete the @param item */
   void deleteItem(TodoItem item);
+
+  /** get amount of items */
+  int getItemsSize();
+
+  /** get the item from the given postion*/
+  TodoItem getItemPos(int position);
+
+  void setAdapter(TodoItemAdapter adapter);
+
+//  void notifyAdapterAboutChange();
 }
