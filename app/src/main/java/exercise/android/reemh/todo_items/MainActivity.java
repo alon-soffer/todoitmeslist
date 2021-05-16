@@ -10,6 +10,10 @@ import android.widget.EditText;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+//TODO: make onclick listener of checkbox work - done goes to bottom of inprogress list and text
+// goes to strike through.
+// in addition support flip screen
+
 public class MainActivity extends AppCompatActivity {
 
     public TodoItemsHolder holder = null;
@@ -30,19 +34,19 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.recyclerTodoItemsList);
 
         TodoItemAdapter todoAdapter = new TodoItemAdapter();
-        todoAdapter.setTodoItemListener(item -> {
-            holder.markItemDone(item);
-//            item.flipInProgress();
-
-            if (!item.isDone())
-            {
-                editText.setPaintFlags(editText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            }
-            else
-            {
-                editText.setPaintFlags(editText.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-            }
-        });
+//        todoAdapter.setTodoItemListener(item -> {
+//            holder.markItemDone(item);
+////            item.flipInProgress();
+//
+//            if (!item.isDone())
+//            {
+//                editText.setPaintFlags(editText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+//            }
+//            else
+//            {
+//                editText.setPaintFlags(editText.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+//            }
+//        });
         todoAdapter.getHolder(holder);
         holder.setAdapter(todoAdapter);
 

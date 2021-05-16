@@ -38,7 +38,7 @@ public class TodoItemsHolderImpl implements TodoItemsHolder {
             {
                 todoItem.setDone(false);
                 Collections.sort(items);
-                notifyAdapterAboutChange();
+//                notifyAdapterAboutChange();
 //                todoItem.flipInProgress();
             }
         }
@@ -52,7 +52,7 @@ public class TodoItemsHolderImpl implements TodoItemsHolder {
             {
                 todoItem.setDone(true);
                 Collections.sort(items);
-                notifyAdapterAboutChange();
+//                notifyAdapterAboutChange();
 //                todoItem.flipInProgress();
             }
         }

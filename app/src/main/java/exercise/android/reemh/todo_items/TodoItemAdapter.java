@@ -14,7 +14,7 @@ import java.util.List;
 public class TodoItemAdapter extends RecyclerView.Adapter<TodoViewHolder> {
 
     private TodoItemsHolder itemsHolder;
-    public TodoItemListener todoItemListener;
+//    public TodoItemListener todoItemListener;
 //    private List<TodoItem> todoItemList = new ArrayList<>();
     //todo: do we need set item list method? or update?
 
@@ -29,7 +29,7 @@ public class TodoItemAdapter extends RecyclerView.Adapter<TodoViewHolder> {
         this.itemsHolder = holder;
     }
 
-    public void setTodoItemListener(TodoItemListener listener){todoItemListener = listener;}
+//    public void setTodoItemListener(TodoItemListener listener){todoItemListener = listener;}
 
     @NonNull
     @Override
@@ -47,14 +47,20 @@ public class TodoItemAdapter extends RecyclerView.Adapter<TodoViewHolder> {
 
         holder.text.setText(item.getTaskText());
         holder.checkBox.setChecked(item.isDone());
-        holder.itemView.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                if(todoItemListener != null)
-                {
-                    todoItemListener.onTodoItemClicked(item);
-                }
-            }
-        });
+//        holder.checkBox.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                System.out.println("button clicked");
+//            }
+//        });
+//        holder.itemView.setOnClickListener(new View.OnClickListener(){
+//            public void onClick(View v){
+//                if(todoItemListener != null)
+//                {
+//                    todoItemListener.onTodoItemClicked(item);
+//                }
+//            }
+//        });
     }
 
 //    @Override
