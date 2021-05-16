@@ -1,6 +1,7 @@
 package exercise.android.reemh.todo_items;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,12 +48,9 @@ public class TodoItemAdapter extends RecyclerView.Adapter<TodoViewHolder> {
 
         holder.text.setText(item.getTaskText());
         holder.checkBox.setChecked(item.isDone());
-//        holder.checkBox.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                System.out.println("button clicked");
-//            }
-//        });
+        holder.checkBox.setOnClickListener(v -> {
+            System.out.println("button clicked");
+        });
 //        holder.itemView.setOnClickListener(new View.OnClickListener(){
 //            public void onClick(View v){
 //                if(todoItemListener != null)
