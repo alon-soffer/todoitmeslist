@@ -1,77 +1,78 @@
-package exercise.android.reemh.todo_items;
+package exercise.android.reemh.todo_items
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import android.os.Bundle
+import android.view.View
+import android.widget.EditText
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-import android.graphics.Paint;
-import android.os.Bundle;
-import android.widget.EditText;
+//TODO:
+// 1) support screen rotation
+// 2) formal tests
+// 3) improve UI
+// 4) UI tests (longer text, etc.)
+// 5) forum messages
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-//TODO: make onclick listener of checkbox work - done goes to bottom of inprogress list and text
-// goes to strike through.
-// in addition support flip screen
+class MainActivity : AppCompatActivity() {
+    @JvmField
+    var holder: TodoItemsHolder? = null
 
-public class MainActivity extends AppCompatActivity {
 
-    public TodoItemsHolder holder = null;
-
-//    private ArrayList<TodoItem> todoItems = new ArrayList<>();
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
         if (holder == null) {
-            holder = new TodoItemsHolderImpl();
+            holder = TodoItemsHolderImpl()
+        }
+        /* find UI elements */
+        val createNewTodoButton = findViewById<FloatingActionButton>(R.id.buttonCreateTodoItem)
+        val editText = findViewById<EditText>(R.id.editTextInsertTask)
+        val recyclerView = findViewById<RecyclerView>(R.id.recyclerTodoItemsList)
+
+        /* init adapter */
+        val todoAdapter = TodoItemAdapter()
+        todoAdapter.setHolder(holder)
+        holder!!.setAdapter(todoAdapter)
+
+        /* init recyclerView */
+        recyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        recyclerView.adapter = todoAdapter
+
+        /* set on click listeners for todoRow elements (checkbox and delete button) */
+        todoAdapter.onItemClickCallback = {todoItem ->
+            if (todoItem.isDone) {
+                holder!!.markItemInProgress(todoItem)
+                todoAdapter.notifyDataSetChanged()
+            } else {
+                holder!!.markItemDone(todoItem)
+                todoAdapter.notifyDataSetChanged()
+            }
         }
 
-        FloatingActionButton createNewTodoButton = findViewById(R.id.buttonCreateTodoItem);
-        EditText editText = findViewById(R.id.editTextInsertTask);
-        RecyclerView recyclerView = findViewById(R.id.recyclerTodoItemsList);
+        todoAdapter.onDeleteClickCallback = {todoItem ->
+            holder!!.deleteItem(todoItem)
+            todoAdapter.notifyDataSetChanged()
+        }
 
-        TodoItemAdapter todoAdapter = new TodoItemAdapter();
-//        todoAdapter.setTodoItemListener(item -> {
-//            holder.markItemDone(item);
-////            item.flipInProgress();
-//
-//            if (!item.isDone())
-//            {
-//                editText.setPaintFlags(editText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-//            }
-//            else
-//            {
-//                editText.setPaintFlags(editText.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-//            }
-//        });
-        todoAdapter.getHolder(holder);
-        holder.setAdapter(todoAdapter);
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
-        recyclerView.setAdapter(todoAdapter);
-
-        createNewTodoButton.setOnClickListener(v -> {
-            String taskDesc = editText.getText().toString();
-            if (taskDesc.isEmpty())
-            {
-                return;
+        /* set on click listener for create task FAB*/
+        createNewTodoButton.setOnClickListener { v: View? ->
+            val taskDesc = editText.text.toString()
+            if (taskDesc.isEmpty()) {
+                return@setOnClickListener
             }
-            holder.addNewInProgressItem(taskDesc);
-            editText.setText("");
-
-        });
+            holder!!.addNewInProgressItem(taskDesc)
+            editText.setText("")
+        }
         // TODO: implement the specs as defined below
         //    (find all UI components, hook them up, connect everything you need)
     }
 }
 
 /*
-
 SPECS:
-
 - the screen starts out empty (no items shown, edit-text input should be empty)
 - every time the user taps the "add TODO item" button:
     * if the edit-text is empty (no input), nothing happens
@@ -93,17 +94,12 @@ SPECS:
 - when a screen rotation happens (user flips the screen):
   * the UI should still show the same list of TodoItems
   * the edit-text should store the same user-input (don't erase input upon screen change)
-
 Remarks:
 - you should use the `holder` field of the activity
 - you will need to create a class extending from RecyclerView.Adapter and use it in this activity
 - notice that you have the "row_todo_item.xml" file and you can use it in the adapter
 - you should add tests to make sure your activity works as expected. take a look at file `MainActivityTest.java`
-
-
-
 (optional, for advanced students:
 - save the TodoItems list to file, so the list will still be in the same state even when app is killed and re-launched
 )
-
 */

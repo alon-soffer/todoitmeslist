@@ -4,20 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-// TODO: implement!
-//public class TodoItemsHolderImpl extends RecyclerView.ViewHolder implements TodoItemsHolder {
 public class TodoItemsHolderImpl implements TodoItemsHolder {
-//    TextView text;
-//    CheckBox checkBox;
     List<TodoItem> items = new ArrayList<>();
     TodoItemAdapter adapter;
-
-//    public TodoItemsHolderImpl(View itemView) {
-//        super(itemView);
-//        text = itemView.findViewById(R.id.todoItemRowText);
-//        checkBox = itemView.findViewById(R.id.todoItemRowCheckBox);
-//    }
-
 
     @Override
     public List<TodoItem> getCurrentItems() { return items; }
@@ -36,12 +25,10 @@ public class TodoItemsHolderImpl implements TodoItemsHolder {
         {
             if (item == todoItem)
             {
-                todoItem.setDone(false);
-                Collections.sort(items);
-//                notifyAdapterAboutChange();
-//                todoItem.flipInProgress();
+                todoItem.setDone(true);
             }
         }
+        Collections.sort(items);
     }
 
     @Override
@@ -50,24 +37,15 @@ public class TodoItemsHolderImpl implements TodoItemsHolder {
         {
             if (item == todoItem)
             {
-                todoItem.setDone(true);
-                Collections.sort(items);
-//                notifyAdapterAboutChange();
-//                todoItem.flipInProgress();
+                todoItem.setDone(false);
             }
         }
+        Collections.sort(items);
     }
 
     @Override
     public void deleteItem(TodoItem item) {
         items.remove(item);
-//        for (TodoItem todoItem : items)
-//        {
-//            if (item == todoItem)
-//            {
-//                items.remove(item);
-//            }
-//        }
     }
 
     @Override
