@@ -1,12 +1,12 @@
 package exercise.android.reemh.todo_items;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class TodoItemsHolderImpl implements TodoItemsHolder {
     List<TodoItem> items = new ArrayList<>();
-    TodoItemAdapter adapter;
 
     @Override
     public List<TodoItem> getCurrentItems() { return items; }
@@ -16,7 +16,6 @@ public class TodoItemsHolderImpl implements TodoItemsHolder {
         TodoItem newItem = new TodoItem();
         newItem.setText(description);
         items.add(0, newItem);
-        notifyAdapterAboutChange();
     }
 
     @Override
@@ -57,16 +56,4 @@ public class TodoItemsHolderImpl implements TodoItemsHolder {
     public TodoItem getItemPos(int position) {
         return items.get(position);
     }
-
-    @Override
-    public void setAdapter(TodoItemAdapter adapter) {
-        this.adapter = adapter;
-    }
-
-//    @Override
-    public void notifyAdapterAboutChange() {
-        adapter.notifyDataSetChanged();
-    }
-
-
 }

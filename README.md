@@ -1,3 +1,19 @@
+"I pledge the highest level of ethical principles in support of academic excellence.
+I ensure that all of my work reflects my own abilities and not those of someone else."
+
+Q: We didn't define any UX flow to let users edit a descrption on an existing TODO item.
+   Which UX flow will you define?
+
+A: I would add an onclicklistener to the textView of the row.
+Clicking the textView will open an edit text box, waiting for the user to add a new text.
+When done, the change will be sent to the whoever needs to know (todoItemsHolder, and notify the
+adapter about the change).
+I believe implementing this solution shouldn't be to hard. Adding a method to todoItemsHolder that
+updates the text of a given item, and adding an onclicklistener to the textView of the row.
+This is quite consistent with the regular android world and should be easy for a user in their first
+usage.
+
+
 # TodoItems List
 
 An Android exercise for developers teaching how to play around with RecyclerView and Adapter

@@ -6,8 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import java.io.Serializable
 
-class TodoItemAdapter : RecyclerView.Adapter<TodoViewHolder>() {
+class TodoItemAdapter : RecyclerView.Adapter<TodoViewHolder>(), Serializable {
     private var itemsHolder: TodoItemsHolder? = null
     var onItemClickCallback: ((TodoItem)->Unit)? = null
     var onDeleteClickCallback: ((TodoItem)->Unit)? = null
@@ -52,6 +53,9 @@ class TodoItemAdapter : RecyclerView.Adapter<TodoViewHolder>() {
 
     override fun getItemCount(): Int {
         // how many items we have in total
+//        return itemsHolder!!.getCurrentItems()!!.size
+//        return itemsHolder!!.currentItems.size
+
         return itemsHolder!!.itemsSize
     }
 }

@@ -6,7 +6,6 @@ class TodoItem : Serializable, Comparable<TodoItem> {
     private val timeOfCreation: Long = System.currentTimeMillis()
     var isDone = false
     var taskText: String? = null
-        private set
 
     fun setText(text: String?) {
         taskText = text

@@ -1,10 +1,11 @@
 package exercise.android.reemh.todo_items;
 
+import java.io.Serializable;
 import java.util.List;
 
 
 // TODO: feel free to add/change/remove methods as you want
-public interface TodoItemsHolder {
+public interface TodoItemsHolder extends Serializable {
 
   /** Get a copy of the current items list */
   List<TodoItem> getCurrentItems();
@@ -30,7 +31,4 @@ public interface TodoItemsHolder {
   /** get the item from the given postion*/
   TodoItem getItemPos(int position);
 
-  void setAdapter(TodoItemAdapter adapter);
-
-//  void notifyAdapterAboutChange();
 }

@@ -8,17 +8,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-//TODO:
-// 1) support screen rotation
-// 2) formal tests
-// 3) improve UI
-// 4) UI tests (longer text, etc.)
-// 5) forum messages
 
 
 class MainActivity : AppCompatActivity() {
     @JvmField
     var holder: TodoItemsHolder? = null
+    private var todoAdapter: TodoItemAdapter? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,28 +28,28 @@ class MainActivity : AppCompatActivity() {
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerTodoItemsList)
 
         /* init adapter */
-        val todoAdapter = TodoItemAdapter()
-        todoAdapter.setHolder(holder)
-        holder!!.setAdapter(todoAdapter)
+        todoAdapter = TodoItemAdapter()
+        todoAdapter!!.setHolder(holder)
+//        holder!!.setAdapter(todoAdapter)
 
         /* init recyclerView */
         recyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         recyclerView.adapter = todoAdapter
 
         /* set on click listeners for todoRow elements (checkbox and delete button) */
-        todoAdapter.onItemClickCallback = {todoItem ->
+        todoAdapter!!.onItemClickCallback = {todoItem ->
             if (todoItem.isDone) {
                 holder!!.markItemInProgress(todoItem)
-                todoAdapter.notifyDataSetChanged()
+                todoAdapter!!.notifyDataSetChanged()
             } else {
                 holder!!.markItemDone(todoItem)
-                todoAdapter.notifyDataSetChanged()
+                todoAdapter!!.notifyDataSetChanged()
             }
         }
 
-        todoAdapter.onDeleteClickCallback = {todoItem ->
+        todoAdapter!!.onDeleteClickCallback = {todoItem ->
             holder!!.deleteItem(todoItem)
-            todoAdapter.notifyDataSetChanged()
+            todoAdapter!!.notifyDataSetChanged()
         }
 
         /* set on click listener for create task FAB*/
@@ -64,10 +59,64 @@ class MainActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
             holder!!.addNewInProgressItem(taskDesc)
+            todoAdapter!!.notifyDataSetChanged()
             editText.setText("")
         }
         // TODO: implement the specs as defined below
         //    (find all UI components, hook them up, connect everything you need)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        val editText = findViewById<EditText>(R.id.editTextInsertTask)
+
+        outState.putSerializable("todo_items_holder", holder)
+        outState.putSerializable("todo_adapter", todoAdapter)
+        outState.putString("current_text", editText.text.toString())
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        holder = savedInstanceState.getSerializable("todo_items_holder") as TodoItemsHolder?
+        todoAdapter = savedInstanceState.getSerializable("todo_adapter") as TodoItemAdapter?
+        val currentText = savedInstanceState.getString("current_text")
+
+        val createNewTodoButton = findViewById<FloatingActionButton>(R.id.buttonCreateTodoItem)
+        val editText = findViewById<EditText>(R.id.editTextInsertTask)
+        val recyclerView = findViewById<RecyclerView>(R.id.recyclerTodoItemsList)
+
+        editText.setText(currentText)
+
+        recyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        recyclerView.adapter = todoAdapter
+
+        /* set on click listeners for todoRow elements (checkbox and delete button) */
+        todoAdapter!!.onItemClickCallback = {todoItem ->
+            if (todoItem.isDone) {
+                holder!!.markItemInProgress(todoItem)
+                todoAdapter!!.notifyDataSetChanged()
+            } else {
+                holder!!.markItemDone(todoItem)
+                todoAdapter!!.notifyDataSetChanged()
+            }
+        }
+
+        todoAdapter!!.onDeleteClickCallback = {todoItem ->
+            holder!!.deleteItem(todoItem)
+            todoAdapter!!.notifyDataSetChanged()
+        }
+
+        /* set on click listener for create task FAB*/
+        createNewTodoButton.setOnClickListener { v: View? ->
+            val taskDesc = editText.text.toString()
+            if (taskDesc.isEmpty()) {
+                return@setOnClickListener
+            }
+            holder!!.addNewInProgressItem(taskDesc)
+            todoAdapter!!.notifyDataSetChanged()
+            editText.setText("")
+        }
+
     }
 }
 

@@ -22,8 +22,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/ItemRowDelButton"
-        app:layout_constraintStart_toEndOf="@id/todoItemRowText"
+        app:layout_constraintEnd_toStartOf="@id/ItemRowDelButton"
         android:checked="false"
         />
 
@@ -34,7 +33,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/todoItemRowCheckBox"
+
         app:srcCompat="@android:drawable/ic_menu_delete"
         tools:layout_editor_absoluteX="40dp"
         />
