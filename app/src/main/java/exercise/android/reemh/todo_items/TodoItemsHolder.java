@@ -10,6 +10,7 @@ public interface TodoItemsHolder extends Serializable {
   /** Get a copy of the current items list */
   List<TodoItem> getCurrentItems();
 
+  void setCurrentItems(List<TodoItem> itemsToSet);
   /**
    * Creates a new TodoItem and adds it to the list, with the @param description and status=IN-PROGRESS
    * Subsequent calls to [getCurrentItems()] should have this new TodoItem in the list
@@ -31,4 +32,6 @@ public interface TodoItemsHolder extends Serializable {
   /** get the item from the given postion*/
   TodoItem getItemPos(int position);
 
+  /** update the given item in the DB*/
+  void updateItem(TodoItem item);
 }

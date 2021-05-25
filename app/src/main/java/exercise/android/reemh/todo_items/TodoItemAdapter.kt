@@ -9,9 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import java.io.Serializable
 
 class TodoItemAdapter : RecyclerView.Adapter<TodoViewHolder>(), Serializable {
-    private var itemsHolder: TodoItemsHolder? = null
+    @Transient private var itemsHolder: TodoItemsHolder? = null
     var onItemClickCallback: ((TodoItem)->Unit)? = null
     var onDeleteClickCallback: ((TodoItem)->Unit)? = null
+    var onTextClickCallback: ((TodoItem)->Unit)? = null
 
     fun setHolder(holder: TodoItemsHolder?) {
         itemsHolder = holder
@@ -24,7 +25,6 @@ class TodoItemAdapter : RecyclerView.Adapter<TodoViewHolder>(), Serializable {
     }
 
     override fun onBindViewHolder(holder: TodoViewHolder, position: Int) {
-
         val item = itemsHolder!!.getItemPos(position)
         holder.text.text = item.taskText
         holder.checkBox.isChecked = item.isDone
@@ -48,14 +48,16 @@ class TodoItemAdapter : RecyclerView.Adapter<TodoViewHolder>(), Serializable {
             val callback = onDeleteClickCallback ?:return@setOnClickListener
             callback(item)
         }
+
+        holder.text.setOnClickListener {
+            val callback = onTextClickCallback ?:return@setOnClickListener
+            callback(item)
+        }
     }
 
 
     override fun getItemCount(): Int {
         // how many items we have in total
-//        return itemsHolder!!.getCurrentItems()!!.size
-//        return itemsHolder!!.currentItems.size
-
         return itemsHolder!!.itemsSize
     }
 }

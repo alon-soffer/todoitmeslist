@@ -1,19 +1,20 @@
 package exercise.android.reemh.todo_items
 
 import java.io.Serializable
+import java.time.LocalDateTime
+import java.util.*
 
 class TodoItem : Serializable, Comparable<TodoItem> {
-    private val timeOfCreation: Long = System.currentTimeMillis()
+    val timeOfCreation: Long = System.currentTimeMillis()
     var isDone = false
     var taskText: String? = null
+    val dateOfCreation: Date = Date()
+    var timeLastModified: Date = dateOfCreation
 
     fun setText(text: String?) {
         taskText = text
     }
 
-    fun flipInProgress() {
-        isDone = !isDone
-    }
 
     override fun compareTo(other: TodoItem): Int {
         if (isDone == other.isDone)

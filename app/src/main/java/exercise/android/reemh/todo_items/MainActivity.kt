@@ -1,36 +1,43 @@
 package exercise.android.reemh.todo_items
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class MainActivity : AppCompatActivity() {
     @JvmField
     var holder: TodoItemsHolder? = null
     private var todoAdapter: TodoItemAdapter? = null
-
+    private var broadcastReceiverForItemEdited : BroadcastReceiver? = null
+    private val BROADCAST_NAME = "update_item"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        val app = applicationContext as TodoApplication
         if (holder == null) {
-            holder = TodoItemsHolderImpl()
+            holder = app.todoItemsDb
         }
+
         /* find UI elements */
         val createNewTodoButton = findViewById<FloatingActionButton>(R.id.buttonCreateTodoItem)
         val editText = findViewById<EditText>(R.id.editTextInsertTask)
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerTodoItemsList)
 
         /* init adapter */
-        todoAdapter = TodoItemAdapter()
-        todoAdapter!!.setHolder(holder)
-//        holder!!.setAdapter(todoAdapter)
+        todoAdapter = app.todoItemAdapter;
 
         /* init recyclerView */
         recyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
@@ -52,6 +59,12 @@ class MainActivity : AppCompatActivity() {
             todoAdapter!!.notifyDataSetChanged()
         }
 
+        todoAdapter!!.onTextClickCallback = {todoItem ->
+            val editIntent = Intent(this, EditScreenActivity::class.java)
+            editIntent.putExtra("item", todoItem)
+            startActivity(editIntent)
+        }
+
         /* set on click listener for create task FAB*/
         createNewTodoButton.setOnClickListener { v: View? ->
             val taskDesc = editText.text.toString()
@@ -62,23 +75,36 @@ class MainActivity : AppCompatActivity() {
             todoAdapter!!.notifyDataSetChanged()
             editText.setText("")
         }
-        // TODO: implement the specs as defined below
-        //    (find all UI components, hook them up, connect everything you need)
+
+        broadcastReceiverForItemEdited = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, incomingIntent: Intent?) {
+                if (incomingIntent == null || incomingIntent.action != BROADCAST_NAME) return
+
+                val todoItem = incomingIntent.getSerializableExtra("updated_item") as TodoItem
+                holder!!.updateItem(todoItem)
+                todoAdapter!!.notifyDataSetChanged()
+            }
+        }
+        registerReceiver(broadcastReceiverForItemEdited, IntentFilter(BROADCAST_NAME))
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(broadcastReceiverForItemEdited)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         val editText = findViewById<EditText>(R.id.editTextInsertTask)
-
-        outState.putSerializable("todo_items_holder", holder)
-        outState.putSerializable("todo_adapter", todoAdapter)
         outState.putString("current_text", editText.text.toString())
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        holder = savedInstanceState.getSerializable("todo_items_holder") as TodoItemsHolder?
-        todoAdapter = savedInstanceState.getSerializable("todo_adapter") as TodoItemAdapter?
+        val app = applicationContext as TodoApplication
+        holder = app.todoItemsDb
+        todoAdapter = app.todoItemAdapter
+
         val currentText = savedInstanceState.getString("current_text")
 
         val createNewTodoButton = findViewById<FloatingActionButton>(R.id.buttonCreateTodoItem)
@@ -106,6 +132,12 @@ class MainActivity : AppCompatActivity() {
             todoAdapter!!.notifyDataSetChanged()
         }
 
+        todoAdapter!!.onTextClickCallback = {todoItem ->
+            val editIntent = Intent(this, EditScreenActivity::class.java)
+            editIntent.putExtra("item", todoItem)
+            startActivity(editIntent)
+        }
+
         /* set on click listener for create task FAB*/
         createNewTodoButton.setOnClickListener { v: View? ->
             val taskDesc = editText.text.toString()
@@ -116,7 +148,6 @@ class MainActivity : AppCompatActivity() {
             todoAdapter!!.notifyDataSetChanged()
             editText.setText("")
         }
-
     }
 }
 
